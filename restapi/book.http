@@ -1,0 +1,35 @@
+POST http://localhost:4000/books
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "title": "jsssss e",
+    "publisher": "64c560bc02c4eb054e420aac",
+    "author": "64c5dafb455ed8ce4b7894a9",
+    "copies": 2
+}
+
+###
+GET http://localhost:4000/books
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+###
+GET http://localhost:4000/books/64c5e6aeb6c5bfd43ce874ce
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+
+###
+PATCH http://localhost:4000/books/64c5e6aeb6c5bfd43ce874ce
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "title": "js lerane",
+    "publisher": "64c560bc02c4eb054e420aac",
+    "author": "64c5dafb455ed8ce4b7894a9",
+    "copies": 1
+}
+
+###
+DELETE  http://localhost:4000/books/64c5e6aeb6c5bfd43ce874ce
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI

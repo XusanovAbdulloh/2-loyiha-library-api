@@ -1,0 +1,28 @@
+POST http://localhost:4000/authors
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "name": "Abdulloh"
+}
+
+###
+GET http://localhost:4000/authors
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+###
+GET http://localhost:4000/authors/64c5dafb455ed8ce4b7894a9
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+###
+PATCH http://localhost:4000/authors/64c5dafb455ed8ce4b7894a9
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "name": "Abdullohhhh"
+}
+
+###
+DELETE  http://localhost:4000/authors/64c5dafb455ed8ce4b7894a9
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI

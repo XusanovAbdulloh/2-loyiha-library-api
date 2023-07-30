@@ -1,0 +1,53 @@
+POST http://localhost:4000/admins/login
+Content-Type: application/json
+
+{
+    "username": "smigGg",
+    "password": "123a"
+}
+
+###
+POST http://localhost:4000/admins/add
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "full_name": "John Smitgg",
+    "username": "smiggeg",
+    "password": "123a"
+}
+
+###
+GET http://localhost:4000/admins?q=John&sort[by]=full_name&sort[order]=desc&filters[is_deleted]=false
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+###
+GET http://localhost:4000/admins/64c507959844d4a44b41d1ae
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+
+###
+PATCH  http://localhost:4000/admins/64c507959844d4a44b41d1ae
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "full_name": "John SmitgGGgg",
+    "username": "smigG",
+    "password": "123a"
+}
+
+###
+
+PATCH  http://localhost:4000/admins/me
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Content-Type: application/json
+
+{
+    "full_name": "John Smit",
+    "username": "smigGg",
+    "password": "123a"
+}
+
+###
+DELETE  http://localhost:4000/admins/64c507959844d4a44b41d1ae
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
