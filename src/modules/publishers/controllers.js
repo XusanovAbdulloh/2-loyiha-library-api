@@ -1,18 +1,20 @@
-const Publisher = require("./Publisher");
+const httpValidator = require("../../shared/http-validator");
+const createPublisherr = require("./create-publisher");
+const { listPublisherSchema, showPublisherSchema, patchPublisherSchema, deletePublisherSchema, postPublisherSchema } = require("./schemas");
+const listPublishers = require("./list-publishers");
+const getPublisher = require("./show-publishers");
+const patchPublisher = require("./update-publisher");
+const removePublisher = require("./delete-publisher");
 
-const createPublisher = async (req, res) => {
-    const { name, address, phone } = req.body;
-  
+const createPublisher = async (req, res) => {  
     try {
-      const publisher = new Publisher({
-        name,
-        address,
-        phone,
+      httpValidator({ body: req.body }, postPublisherSchema);
+
+      const result = await createPublisherr(req.body);
+  
+      res.status(201).json({
+        data: result,
       });
-  
-      await publisher.save();
-  
-      res.json(publisher);
     } catch (err) {
       console.error(err);
       res.json({message: "error viev console"})
@@ -20,48 +22,29 @@ const createPublisher = async (req, res) => {
   };
 
   const getPublishers = async (req, res) => {
-    const { q, sort, page } = req.query;
-    const perPage = 10;
-    const currentPage = parseInt(page) || 1;
-  
-    let query = {};
-  
-    if (q) {
-      query.name = { $regex: q, $options: 'i' };
-    }
   
     try {
-      const totalCount = await Publisher.countDocuments(query);
-      const totalPages = Math.ceil(totalCount / perPage);
+      httpValidator({ query: req.query }, listPublisherSchema);
+      const data = await listPublishers(req.query);
   
-      let sortOption = { name: -1 };
-      if (sort && sort === 'name') {
-        sortOption = { name: 1 };
-      }
-
-      const publishers = await Publisher.find(query)
-        .sort(sortOption)
-        .skip((currentPage - 1) * perPage)
-        .limit(perPage);
-  
-      res.json({ totalPages, currentPage, publishers });
+      res.status(200).json({
+        data: data,
+      });
     } catch (err) {
       console.error(err);
       res.json({message: "error viev console"})
     }
   };
 
-  const getPublisherById = async (req, res) => {
-    const { id } = req.params;
-  
+  const getPublisherById = async (req, res) => {  
     try {
-      const publisher = await Publisher.findById(id);
+      httpValidator({ params: req.params }, showPublisherSchema);
+
+      const data = await getPublisher(req.params);
   
-      if (!publisher) {
-        return res.status(404).json({ message: 'not found' });
-      }
-  
-      res.json(publisher);
+      res.json({
+        data: data,
+      });
     } catch (err) {
       console.error(err);
       res.json({message: "error viev console"})
@@ -69,23 +52,14 @@ const createPublisher = async (req, res) => {
   };
 
   const updatePublisher = async (req, res) => {
-    const { id } = req.params;
-    const { name, address, phone } = req.body;
-  
     try {
-      const publisher = await Publisher.findById(id);
+      httpValidator({ body: req.body, params: req.params }, patchPublisherSchema);
+
+      const data = await patchPublisher({id: req.params.id,changes: req.body });
   
-      if (!publisher) {
-        return res.status(404).json({ message: 'not found' });
-      }
-  
-      publisher.name = name;
-      publisher.address = address;
-      publisher.phone = phone;
-  
-      await publisher.save();
-  
-      res.json(publisher);
+      res.status(201).json({
+        data: data,
+      });
     } catch (err) {
       console.error(err);
       res.json({message: "error viev console"})
@@ -94,17 +68,10 @@ const createPublisher = async (req, res) => {
   
   
   const deletePublisher = async (req, res) => {
-    const { id } = req.params;
-  
     try {
-      const publisher = await Publisher.findById(id);
-  
-      if (!publisher) {
-        return res.status(404).json({ message: 'not found' });
-      }
-  
-      publisher.is_deleted = true;
-      await publisher.save();
+      httpValidator({ params: req.params }, deletePublisherSchema);
+
+    await removePublisher(req.params);
   
       res.json({ message: 'Publisher deleted successfully' });
     } catch (err) {

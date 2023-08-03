@@ -1,85 +1,80 @@
-const Book = require('./Book');
+const httpValidator = require("../../shared/http-validator")
+const addBook = require('./addBook');
+const getBook = require('./get-book');
+const listBooks = require('./list-books');
+const removeBook = require("./remove-book");
+const { postBookSchema, listBookSchema, showBookSchema, patchBookSchema, deleteBookSchema } = require('./schemas');
+const patchBook = require('./update-book');
 
 const createBook = async (req, res) => {
   try {
-    const { title, publisher, author, copies } = req.body;
-    const book = new Book({ title, publisher, author, copies });
-    await book.save();
-    res.status(201).json(book);
+    httpValidator({ body: req.body }, postBookSchema);
+
+    const data = await addBook(req.body);
+
+    res.json({
+      data: data,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error viev console' });
   }
 };
 
 const getBooks = async (req, res) => {
   try {
-    const { q, sort, page, filters } = req.query;
-    const searchQuery = q ? { title: { $regex: q, $options: 'i' } } : {};
-    const sortQuery = sort ? { [sort.by]: sort.order === 'desc' ? -1 : 1 } : { copies: -1 };
-    const limit = 10;
-    const skip = (page - 1) * limit || 0;
-    const filterQuery = filters && filters.is_deleted ? { is_deleted: true } : {};
+    httpValidator({ query: req.query }, listBookSchema);
+    const data = await listBooks(req.query);
 
-    const books = await Book.find({ ...searchQuery, ...filterQuery })
-      .sort(sortQuery)
-      .limit(limit)
-      .skip(skip)
-      .populate('publisher')
-      .populate('author');
-
-    const totalBooks = await Book.countDocuments({ ...searchQuery, ...filterQuery });
-    const totalPages = Math.ceil(totalBooks / limit);
-
-    res.json({ books, totalBooks, totalPages });
+    res.json({
+      data: data,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error viev console' });
   }
 };
 
 
 const getBookById = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id).populate('publisher').populate('author');
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
-    }
-    res.json(book);
+    httpValidator({ params: req.params }, showBookSchema);
+
+    const data = await getBook(req.params);
+
+    res.json({
+      data: data,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error viev console' });
   }
 };
 
 const updateBook = async (req, res) => {
   try {
-    const { title, publisher, author, copies } = req.body;
-    const book = await Book.findById(req.params.id);
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
-    }
-    book.title = title;
-    book.publisher = publisher;
-    book.author = author;
-    book.copies = copies;
-    await book.save();
-    res.json(book);
+    httpValidator({ body: req.body, params: req.params }, patchBookSchema);
+
+    const data = await patchBook({ id: req.params.id, changes: req.body });
+
+    res.status(201).json({
+      data: data,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error viev console' });
   }
 };
 
 const deleteBook = async (req, res) => {
   try {
-    const book = await Book.findById(req.params.id);
-    if (!book) {
-      return res.status(404).json({ message: 'Book not found' });
-    }
-    book.is_deleted = true;
-    await book.save();
-    res.json({ message: 'Book deleted successfully' });
+    httpValidator({ params: req.params }, deleteBookSchema);
+
+    await removeBook(req.params);
+
+    res.json({
+      message: "book deleted sucesffyle"
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error' });

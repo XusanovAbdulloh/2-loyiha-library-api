@@ -1,39 +1,31 @@
-const express = require('express');
-const Author = require('./Author');
-const { BadRequestError, NotFoundError } = require("../../shared/errors")
+const addAuthor = require("./add-author");
+const httpValidator = require("../../shared/http-validator/index")
+const {postAuthorSchema, listAuthorSchema, showAuthorSchema, patchAuthorSchema, deleteAuthorSchema} = require("./schemas");
+const listAuthors = require('./list-authors');
+const getAuthor = require('./show-author');
+const updateAuthorr = require('./update-author');
+const removeAuthor = require("./delete-author")
 
-
-const createAuthor = async (req, res) => {
+const createAuthor = async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const author = new Author({ name });
-    await author.save();
-    res.status(201).json(author);
-  } catch (err) {
-    console.error(err);
+    httpValidator({ body: req.body }, postAuthorSchema);
+
+    const result = await addAuthor(req.body);
+
+    res.status(201).json({
+      data: result,
+    });
+  } catch (error) {
+    console.log(error);
     res.json({message: "error viev console"})
   }
 };
 
-
 const getAuthors = async (req, res) => {
   try {
-    const { q, sort, page, filters } = req.query;
-    const searchQuery = q ? { name: { $regex: q, $options: 'i' } } : {};
-    const sortQuery = sort ? { [sort.by]: sort.order === 'desc' ? -1 : 1 } : { name: 1 };
-    const limit = 10;
-    const skip = (page - 1) * limit || 0;
-    const filterQuery = filters && filters.is_deleted ? { is_deleted: true } : {};
-
-    const authors = await Author.find({ ...searchQuery, ...filterQuery })
-      .sort(sortQuery)
-      .limit(limit)
-      .skip(skip);
-
-    const totalAuthors = await Author.countDocuments({ ...searchQuery, ...filterQuery });
-    const totalPages = Math.ceil(totalAuthors / limit);
-
-    res.json({ authors, totalAuthors, totalPages });
+    httpValidator({ query: req.query }, listAuthorSchema);
+    const data = await listAuthors(req.query);
+    res.json({data: data})
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -42,11 +34,13 @@ const getAuthors = async (req, res) => {
 
 const getAuthorById = async (req, res) => {
   try {
-    const author = await Author.findById(req.params.id);
-    if (!author) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    res.json(author);
+    httpValidator({ params: req.params }, showAuthorSchema);
+
+    const author = await getAuthor(req.params);
+
+    res.status(200).json({
+      data: author,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -55,14 +49,13 @@ const getAuthorById = async (req, res) => {
 
 const updateAuthor = async (req, res) => {
   try {
-    const { name } = req.body;
-    const author = await Author.findById(req.params.id);
-    if (!author) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    author.name = name;
-    await author.save();
-    res.json(author);
+    httpValidator({ body: req.body, params: req.params }, patchAuthorSchema);
+
+    const result = await updateAuthorr({ id: req.params.id, changes: req.body });
+
+    res.status(201).json({
+      data: result,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -71,13 +64,13 @@ const updateAuthor = async (req, res) => {
 
 const deleteAuthor = async (req, res) => {
   try {
-    const author = await Author.findById(req.params.id);
-    if (!author) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    author.is_deleted = true;
-    await author.save();
-    res.json({ message: 'Author deleted successfully' });
+    httpValidator({ params: req.params }, deleteAuthorSchema);
+
+    const result = await removeAuthor(req.params);
+
+    res.status(201).json({
+      data: result,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})

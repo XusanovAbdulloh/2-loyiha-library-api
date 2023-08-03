@@ -15,7 +15,7 @@ const isLoggedIn = (req, res, next) => {
       throw new UnauthorizedError('Unauthorized.');
     }
 
-    const decoded = jwt.verify(token, "hey", { ignoreExpiration: false });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET, { ignoreExpiration: false });
 
     req.user = decoded;
     

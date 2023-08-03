@@ -1,24 +1,21 @@
-const jwt = require("jsonwebtoken")
-const isSuperAdmin = (req, res, next) => {
-  const token = req.header('Authorization');
+const express = require("express");
+const { ForbiddenError } = require("../errors");
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token kelmadi' });
-  }
+/**
+ *
+ * @param {express.Request} req
+ * @param {express.Response} res
+ * @param {express.NextFunction} next
+ */
 
+const isSuper = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(token, 'hey');
-    if (!decodedToken.isSuperAdmin === true) {
-      return res.status(403).json({ message: 'Faqat super adminlarga ruxsat berilgan' });
+    if (!req.user.isSuperAdmin) {
+      throw new ForbiddenError("Ruxsat yo'q");
     }
-    req.adminId = decodedToken.adminId; 
-    next(); 
-  } catch (err) {
-    console.error(err);
-    res.status(401).json({ message: 'Noto\'g\'ri yoki amal qilmas token' });
+  next();
+  } catch (error) {
+    next(error);
   }
 };
-
-
-
-module.exports = { isSuperAdmin };
+module.exports = {isSuper};

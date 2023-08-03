@@ -2,52 +2,52 @@ POST http://localhost:4000/admins/login
 Content-Type: application/json
 
 {
-    "username": "smigGg",
+    "username": "abu",
     "password": "123a"
 }
 
 ###
 POST http://localhost:4000/admins/add
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw
 Content-Type: application/json
 
 {
-    "full_name": "John Smitgg",
-    "username": "smiggeg",
+    "full_name": "John",
+    "username": "tessssss",
     "password": "123a"
 }
 
 ###
-GET http://localhost:4000/admins?q=John&sort[by]=full_name&sort[order]=desc&filters[is_deleted]=false
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+GET http://localhost:4000/admins?q=John&page[limit]=6&page[offset]=5
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw
 
 ###
 GET http://localhost:4000/admins/64c507959844d4a44b41d1ae
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw
 
 ###
 PATCH  http://localhost:4000/admins/64c507959844d4a44b41d1ae
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw
 Content-Type: application/json
 
 {
-    "full_name": "John SmitgGGgg",
-    "username": "smigG",
+    "full_name": "John SmitgGGe",
+    "username": "sm",
     "password": "123a"
 }
 
 ###
 
 PATCH  http://localhost:4000/admins/me
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw
 Content-Type: application/json
 
 {
-    "full_name": "John Smit",
-    "username": "smigGg",
+    "full_name": "Abdullo",
+    "username": "abu",
     "password": "123a"
 }
 
 ###
 DELETE  http://localhost:4000/admins/64c507959844d4a44b41d1ae
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTA2OTYwMzksImV4cCI6MTY5MDc4MjQzOX0.mO06Qb_Qu88pw15F6fVccJLVhxlySl6o4mrkJxZAVgI
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhZG1pbklkIjoiNjRjNGVkYTk4NDE0MDY2Y2NiMmFkNWY2IiwiaXNTdXBlckFkbWluIjp0cnVlLCJpYXQiOjE2OTEwNDY0MjAsImV4cCI6MTY5MTEzMjgyMH0.HquT9qz_f19X3eh4c7aaeqnLPcTpR9JgkEky37KgyWw

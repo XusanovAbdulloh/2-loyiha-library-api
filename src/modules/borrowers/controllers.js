@@ -1,11 +1,22 @@
 const Borrower = require('./Borrower');
+const creatBorrower = require('./create-borrower');
+const httpValidator = require("./../../shared/http-validator/index.js");
+const { listBorrowerSchema, showBorrowerSchema, patchBorrowerSchema, deleteBorrowerSchmea, postBorrowerSchema } = require('./schemas');
+const listBorrowers = require('./list-borrowers');
+const getBorrower = require('./show-borrower');
+const patchBorrower = require('./update-borrower');
+const removeBorrower = require('./remove-borrower');
 
 const createBorrower = async (req, res) => {
-  const borrowerData = req.body;
-
   try {
-    const newBorrower = await Borrower.create(borrowerData);
-    res.json(newBorrower);
+    httpValidator({ body: req.body }, postBorrowerSchema);
+
+    const result = await creatBorrower(req.body);
+    console.log(req.body);
+
+    res.status(201).json({
+      data: result,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -13,38 +24,10 @@ const createBorrower = async (req, res) => {
 };
 
 const getBorrowers = async (req, res) => {
-    const { q, sort, page } = req.query;
-    const perPage = 10;
-    const currentPage = parseInt(page) || 1;
-  
-    let query = {};
-  
-    if (q) {
-      query.$or = [
-        { full_name: { $regex: q, $options: 'i' } },
-        { phone: { $regex: q, $options: 'i' } },
-      ];
-    }
-  
     try {
-      const totalCount = await Borrower.countDocuments(query);
-      const totalPages = Math.ceil(totalCount / perPage);
-  
-      let sortOption = { full_name: -1 };
-      if (sort) {
-        if (sort === 'full_name') {
-          sortOption = { full_name: 1 };
-        } else if (sort === 'phone') {
-          sortOption = { phone: 1 };
-        }
-      }
-  
-      const borrowers = await Borrower.find(query)
-        .sort(sortOption)
-        .skip((currentPage - 1) * perPage)
-        .limit(perPage);
-  
-      res.json({ totalPages, currentPage, borrowers });
+      httpValidator({ query: req.query }, listBorrowerSchema);
+      const data = await listBorrowers(req.query)
+      res.json({data: data})
     } catch (err) {
       console.error(err);
       res.json({message: "error viev console"})
@@ -53,14 +36,13 @@ const getBorrowers = async (req, res) => {
 
 
 const getBorrowerById = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const borrower = await Borrower.findById(id);
-    if (!borrower) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    res.json(borrower);
+    httpValidator({ params: req.params }, showBorrowerSchema);
+    const result = await getBorrower(req.params);
+
+    res.json({
+      data: result,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -68,15 +50,14 @@ const getBorrowerById = async (req, res) => {
 };
 
 const updateBorrower = async (req, res) => {
-  const { id } = req.params;
-  const borrowerData = req.body;
-
   try {
-    const updatedBorrower = await Borrower.findByIdAndUpdate(id, borrowerData, { new: true });
-    if (!updatedBorrower) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    res.json(updatedBorrower);
+    httpValidator({ body: req.body, params: req.params }, patchBorrowerSchema);
+
+    const data = await patchBorrower({ id: req.params.id, changes: req.body });
+
+    res.json({
+      data: data,
+    });
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"})
@@ -84,14 +65,14 @@ const updateBorrower = async (req, res) => {
 };
 
 const deleteBorrower = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const deletedBorrower = await Borrower.findByIdAndUpdate(id, { is_deleted: true }, { new: true });
-    if (!deletedBorrower) {
-      return res.status(404).json({ message: 'not found' });
-    }
-    res.json(deletedBorrower);
+    httpValidator({ params: req.params }, deleteBorrowerSchmea);
+
+    const borrower = await removeBorrower(req.params);
+
+    res.json({
+      data: borrower,
+    });;
   } catch (err) {
     console.error(err);
     res.json({message: "error viev console"}) 

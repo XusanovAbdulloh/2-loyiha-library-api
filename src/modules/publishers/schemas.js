@@ -1,14 +1,46 @@
-const Joi = require('joi');
+const Joi = require("joi");
+const { pageSchema, buildSortSchema } = require("../../shared/pagenatsion");
 
-const publisherSchema = Joi.object({
-  name: Joi.string().required(),
-  address: Joi.string().required(),
-  phone: Joi.string().required(),
-});
-const publisherEditSchema = Joi.object({
-  name: Joi.string(),
-  address: Joi.string(),
-  phone: Joi.string(),
-});
+exports.postPublisherSchema = {
+  body: Joi.object({
+    name: Joi.string().required(),
+    address: Joi.string().required(),
+    phone: Joi.string().required(),
+    is_deleted: Joi.boolean().default(false),
+  }),
+};
 
-module.exports ={ publisherSchema, publisherEditSchema};
+exports.showPublisherSchema = {
+  params: Joi.object({
+    id: Joi.string(),
+  }),
+};
+
+exports.listPublisherSchema = {
+  query: Joi.object({
+    q: Joi.string(),
+    page: pageSchema,
+
+    sort: buildSortSchema(["is_deleted"]),
+    filters: {
+      is_super: Joi.boolean(),
+    },
+  }),
+};
+
+exports.patchPublisherSchema = {
+  params: Joi.object({
+    id: Joi.string(),
+  }),
+  body: Joi.object({
+    name: Joi.string().required(),
+    address: Joi.string().required(),
+    phone: Joi.string().required(),
+  }),
+};
+
+exports.deletePublisherSchema = {
+  params: Joi.object({
+    id: Joi.string(),
+  }),
+};

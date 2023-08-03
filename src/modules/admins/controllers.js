@@ -1,201 +1,127 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const mongoose = require("mongoose")
 const Admin = require('./Admin');
+require("dotenv/config");
+const httpValidator = require("../../shared/http-validator");
+const { loginAdminSchema, postAdminSchema, listAdminsSchema, showAdminSchema, patchAdminSchema, deleteAdminSchmea } = require("./schemas");
+const listAdmins = require("./list-admins");
+const createAdmin = require("./create-admin");
+const getAdmin = require("./show-admin");
+const patchAdmin = require("./patch-admin");
+const removeAdmin = require("./remove-admin")
 // const { UnauthorizedError, NotFoundError, BadRequestError } = require('../../shared/errors');
 
-const loginUser =   async (req, res) => {
+
+const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
-  
   try {
+    httpValidator({ body: req.body }, loginAdminSchema);
     const admin = await Admin.findOne({ username });
     console.log(admin);
     if (!admin) {
       // throw new UnauthorizedError('Login ma\'lumotlari noto\'g\'ri');
-      res.json({message: "login malumotlarini notogri"})
+      return res.json({ message: "login malumotlarini notogri" })
     }
 
     const token = jwt.sign(
       { adminId: admin._id, isSuperAdmin: admin.is_super },
-      'hey',
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
     res.json({ token });
   } catch (err) {
-    console.error(err);
-    // throw new BadRequestError("server xatosi")
-    res.json({message: "error viev console"})
+    next(err)
   }
 };
 
-const addAdmin = async(req, res) => {
-  const { full_name, username, password } = req.body;
-
+const addAdmin = async (req, res) => {
   try {
-    const newAdmin = new Admin({
-      full_name,
-      username,
-      password,
-      is_super: false
-    });
-
-    const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
-    newAdmin.password = hashedPassword;
-
-    const savedAdmin = await newAdmin.save();
-
-    res.status(201).json(savedAdmin);
+    httpValidator({ body: req.body }, postAdminSchema)
+    const result = await createAdmin(req.body)
+    res.json({
+      data: result
+    })
   } catch (err) {
     console.error(err);
-    res.json({message: "error viev console"})
+    res.json({ message: "error viev console" })
   }
 };
 
 
 const getAdmins = async (req, res) => {
-  try {
-    const { q, sort, filters, page } = req.query;
-    const PAGE_SIZE = 10;
-    const pageNumber = parseInt(page) || 1;
-    const skip = (pageNumber - 1) * PAGE_SIZE;
-
-    let filterQuery = {};
-    if (filters && filters.is_deleted !== undefined) {
-      filterQuery.is_deleted = filters.is_deleted;
-    }
-    if (filters && filters.is_super !== undefined) {
-      filterQuery.is_super = filters.is_super;
-    }
-
-    let sortQuery = {};
-    if (sort) {
-      const sortBy = sort.by || 'full_name';
-      const sortOrder = sort.order === 'desc' ? -1 : 1;
-      sortQuery[sortBy] = sortOrder;
-    }
-
-    let searchQuery = {};
-    if (q) {
-      const searchRegex = new RegExp(q, 'i');
-      searchQuery = {
-        $or: [{ full_name: searchRegex }, { username: searchRegex }],
-      };
-    }
-
-    const totalAdmins = await Admin.countDocuments(filterQuery);
-    const admins = await Admin.find({ ...filterQuery, ...searchQuery })
-      .sort(sortQuery)
-      .skip(skip)
-      .limit(PAGE_SIZE);
-
-    const totalPages = Math.ceil(totalAdmins / PAGE_SIZE);
-
-    res.json({
-      page: pageNumber,
-      totalPages,
-      totalResults: totalAdmins,
-      admins,
+ try{
+    httpValidator({ query: req.query }, listAdminsSchema);
+     const data = await listAdmins(req.query)
+    res.status(200).json({
+      data: data,
     });
   } catch (err) {
     console.error(err);
-    res.json({message: "error viev console"})
+    res.json({ message: "Xato: Konsolda ko'ring" });
   }
 };
 
-const showAdmin =  async (req, res) => {
-  const { id } = req.params;
 
+const showAdmin = async (req, res) => {
   try {
-    const admin = await Admin.findById(id);
+    httpValidator({params: req.params}, showAdminSchema)
 
-    if (!admin) {
-      return res.status(404).json({ message: 'Admin topilmadi' });
-    }
-
-    res.json(admin);
+    const result = await getAdmin(req.params);
+    res.json({
+      data: result
+    })
   } catch (err) {
     console.error(err);
-    res.json({message: "error viev console"})
+    res.json({ message: "error viev console" })
   }
 };
 
 const editAdmin = async (req, res) => {
-  const { id } = req.params;
-  const { full_name, username, password } = req.body;
-
   try {
-    const admin = await Admin.findById(id);
-
-    if (!admin) {
-      return res.status(404).json({ message: 'Adminn topilmadi' });
-    }
-
-
-    admin.full_name = full_name;
-    admin.username = username;
-    admin.password = password;
-
-    await admin.save();
-
-    res.json(admin);
+     httpValidator({params: req.params, body: req.body}, patchAdminSchema)
+     const result = await patchAdmin({ id: req.params.id, changes: req.body });
+     res.json({
+       data: result,
+     });
   } catch (err) {
     console.error(err);
-    res.json({message: "error viev console"})
+    res.json({ message: "error viev console" })
   }
 };
 
 
 const editMe = async (req, res) => {
-  const { full_name, username, password } = req.body;
-  const user = req.user; 
+  const user = req.user;
   console.log(user);
   const userId = new mongoose.Types.ObjectId(user.adminId);
 
   try {
-    const admin = await Admin.findById(userId);
+    const patched = await patchAdmin(
+      { id: userId, changes: req.body },patchAdminSchema
+    );
 
-    if (!admin) {
-      return res.status(404).json({ message: 'error' });
-    } 
-    admin.full_name = full_name;
-    admin.username = username;
-    admin.password = password;
-
-    await admin.save();
-
-    res.json(admin);
-  } catch (err) {
-    console.error(err);
-    res.json({message: "error viev console"})
+    res.status(201).json({
+      data: patched,
+    });
+  } catch (error) {
+    next(error);
   }
 };
 
 const deleteAdmin = async (req, res) => {
-  const adminId = req.params.id;
-
-
   try {
-  
-    const adminToDelete = await Admin.findById(adminId);
+    httpValidator({ params: req.params }, deleteAdminSchmea);
 
-    if (!adminToDelete) {
-      return res.status(404).json({ message: 'Admin not found.' });
-    }
-
-    adminToDelete.is_deleted = true;
-
-    await adminToDelete.save();
+    await removeAdmin(req.params);
 
     res.json({ message: 'Admin deleted successfully.' });
   } catch (err) {
     console.error(err);
-    res.json({message: "error viev console"})
+    res.json({ message: "error viev console" })
   }
 };
 
 
 
-module.exports = {loginUser, addAdmin, getAdmins, showAdmin, editAdmin, editMe, deleteAdmin}
+module.exports = { loginUser, addAdmin, getAdmins, showAdmin, editAdmin, editMe, deleteAdmin }
